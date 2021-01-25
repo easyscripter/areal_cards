@@ -1,13 +1,56 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+      <div class="cards-container">
+        <Card v-for="(card, index) in paginatedCards" :key="index" :cardData="card"></Card>
+      </div>
+      <div class="pages">
+        <ul><li :class="{page_selected: page === pageNumber}" v-for="page in pages" :key="page" @click="pageClick(page)">{{page}}</li></ul>
+      </div>
   </div>
 </template>
+<script>
+// import axios from "axios";
+import Data from "./Storage/DATA";
+import Card from "@/components/Card";
+export default {
+  components: {
+    Card: Card
+  },
+  data() {
+    return {
+      cardData: [],
+      cardsPerPage: 12,
+      pageNumber: 1
+    };
+  },
+  computed: {
+    pages() {
+      return Math.floor(this.cardData.length / this.cardsPerPage);
+    },
+    paginatedCards() {
+      let from = (this.pageNumber - 1) * this.cardsPerPage;
+      let to = from + this.cardsPerPage;
 
+      return this.cardData.slice(from, to);
+    }
+  },
+  mounted() {
+    this.getDataFromLocal();
+  },
+  methods: {
+    // async getDataFromServer() {
+    //   await axios.get("Storage/DATA.json")
+    //       .then(response => {this.cardData = response.data})
+    // }
+    getDataFromLocal() {
+      this.cardData = Data;
+    },
+    pageClick(page) {
+      this.pageNumber = page;
+    }
+  }
+};
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -15,17 +58,38 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .pages {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    ul {
+      display: flex;
+      list-style: none;
+      color: #ffffff;
+      li {
+        margin-right: 3px;
+        padding: 10px;
+        background-color: #222831;
+        cursor: pointer;
+        transition: box-shadow 0.4s ease-in-out;
+        &:hover {
+          -webkit-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+          -moz-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+          box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+        }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+      }
+    }
+    .page_selected {
+      cursor: pointer;
+      color: #ffffff;
+      -webkit-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+      -moz-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+      box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
     }
   }
 }
