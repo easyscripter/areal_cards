@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     goToProfile() {
-      this.$router.push({name: 'profilePage', params: {}})
+      this.$router.push({name: 'ProfilePage', params: {profileId: this.cardData.id}})
     }
   }
 };
@@ -52,7 +52,7 @@ export default {
    .card-header-container {
      width: 100%;
      img {
-       max-width: 100%;
+       max-width: 30%;
        margin-top: 20px;
        border-radius: 50%;
        border: 5px solid #272133;
