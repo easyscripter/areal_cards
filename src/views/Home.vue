@@ -1,7 +1,8 @@
 <template>
   <div class="Home">
+    <easy-finder placeholder-text="Найти сотрудника" v-model="findName" :show-button="true"></easy-finder>
     <div class="cards-container">
-      <Card v-for="(card, index) in paginatedCards" :key="index" :cardData="card"></Card>
+      <Card v-for="(card, index) in findingUsers" :key="index" :cardData="card"></Card>
     </div>
     <div class="pages">
       <ul><li :class="{page_selected: page === pageNumber}" v-for="page in pages" :key="page" @click="pageClick(page)">{{page}}</li></ul>
@@ -11,12 +12,13 @@
 
 <script>
 import Card from "@/components/Card";
-
+import EasyFinder from "@/components/EasyFinder";
 
 export default {
   name: "Home",
   components: {
-    Card: Card
+    Card: Card,
+    EasyFinder: EasyFinder
   },
   props: {
     cardData: {
@@ -27,7 +29,8 @@ export default {
   data() {
     return {
       cardsPerPage: 12,
-      pageNumber: 1
+      pageNumber: 1,
+      findName: ''
     };
   },
   computed: {
@@ -39,6 +42,16 @@ export default {
       let to = from + this.cardsPerPage;
 
       return this.cardData.slice(from, to);
+    },
+    findingUsers() {
+      if (!this.findName.length) {
+        return this.paginatedCards;
+      }
+
+      return this.cardData.filter(user => {
+        if (user.Name.toLowerCase().includes(this.findName.toLowerCase().trim()))
+          return user;
+      });
     }
   },
   methods: {
