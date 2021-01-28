@@ -1,11 +1,28 @@
 <template>
   <div class="Home">
-    <easy-finder placeholder-text="Найти сотрудника" v-model="findName" :show-button="true"></easy-finder>
+    <easy-finder
+      placeholder-text="Найти сотрудника"
+      v-model="findName"
+      :show-button="true"
+    ></easy-finder>
     <div class="cards-container">
-      <Card v-for="(card, index) in findingUsers" :key="index" :cardData="card"></Card>
+      <Card
+        v-for="(card, index) in findingUsers"
+        :key="index"
+        :cardData="card"
+      ></Card>
     </div>
     <div class="pages">
-      <ul><li :class="{page_selected: page === pageNumber}" v-for="page in pages" :key="page" @click="pageClick(page)">{{page}}</li></ul>
+      <ul>
+        <li
+          :class="{ page_selected: page === pageNumber }"
+          v-for="page in pages"
+          :key="page"
+          @click="pageClick(page)"
+        >
+          {{ page }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -13,6 +30,7 @@
 <script>
 import Card from "@/components/Card";
 import EasyFinder from "@/components/EasyFinder";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -20,41 +38,42 @@ export default {
     Card: Card,
     EasyFinder: EasyFinder
   },
-  props: {
-    cardData: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
     return {
       cardsPerPage: 12,
       pageNumber: 1,
-      findName: ''
+      findName: ""
     };
   },
   computed: {
+    ...mapGetters(["getProfiles"]),
     pages() {
-      return Math.floor(this.cardData.length / this.cardsPerPage);
+      return Math.floor(this.getProfiles.length / this.cardsPerPage);
     },
     paginatedCards() {
       let from = (this.pageNumber - 1) * this.cardsPerPage;
       let to = from + this.cardsPerPage;
 
-      return this.cardData.slice(from, to);
+      return this.getProfiles.slice(from, to);
     },
     findingUsers() {
       if (!this.findName.length) {
         return this.paginatedCards;
       }
 
-      return this.cardData.filter(user => {
-        if (user.Name.toLowerCase().includes(this.findName.toLowerCase().trim()))
+      return this.getProfiles.filter(user => {
+        if (
+          user.Name.toLowerCase().includes(this.findName.toLowerCase().trim())
+        )
           return user;
       });
     }
   },
+  async mounted() {
+    this.fetchProfiles();
+  },
   methods: {
+    ...mapActions(["fetchProfiles"]),
     pageClick(page) {
       this.pageNumber = page;
     }
@@ -82,19 +101,18 @@ export default {
       cursor: pointer;
       transition: box-shadow 0.4s ease-in-out;
       &:hover {
-        -webkit-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
-        -moz-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
-        box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+        -webkit-box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
+        -moz-box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
+        box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
       }
-
     }
   }
   .page_selected {
     cursor: pointer;
     color: #ffffff;
-    -webkit-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
-    -moz-box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
-    box-shadow: 2px 2px 3px 0px rgba(235, 25, 110, 1);
+    -webkit-box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
+    -moz-box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
+    box-shadow: 2px 2px 3px 0 rgba(235, 25, 110, 1);
   }
 }
 </style>

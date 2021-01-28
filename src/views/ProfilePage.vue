@@ -1,38 +1,36 @@
 <template>
-<div class="profile-page">
-  <button @click="goBackToCards">Go Back To Cards</button>
-  <div class="profile-page-container">
-    <div class="profile-page-avatar-block">
-      <img :src="profileFromId.Avatar" alt="Фото карточки">
-    </div>
-    <div class="profile-page-info-block">
-      <h3 class="profile-name">Имя сотрудника: {{profileFromId.Name}}</h3>
-      <ul class="profile-specs">
-        <li>Организация: {{profileFromId.Job}}</li>
-        <li>Навыки: {{profileFromId.Skills}}</li>
-      </ul>
+  <div class="profile-page">
+    <button @click="goBackToCards">Go Back To Cards</button>
+    <div class="profile-page-container">
+      <div class="profile-page-avatar-block">
+        <img :src="profileFromId.Avatar" alt="Фото карточки" />
+      </div>
+      <div class="profile-page-info-block">
+        <h3 class="profile-name">Имя сотрудника: {{ profileFromId.Name }}</h3>
+        <ul class="profile-specs">
+          <li>Организация: {{ profileFromId.Job }}</li>
+          <li>Навыки: {{ profileFromId.Skills }}</li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "ProfilePage",
-  props: {
-    cardData: {
-      type: Array,
-      required: true
-    }
-  },
   computed: {
+    ...mapGetters(["getProfiles"]),
     profileFromId() {
-      return this.cardData.find(item => item.id === this.$route.params.profileId);
+      return this.getProfiles.find(
+        item => item.id === this.$route.params.profileId
+      );
     }
   },
   methods: {
     goBackToCards() {
-      this.$router.push({name: 'Home'});
+      this.$router.push({ name: "Home" });
     }
   }
 };
@@ -46,9 +44,9 @@ export default {
     width: 150px;
     height: 50px;
     background-color: #ffffff;
-    -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
-    -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
-    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
+    -webkit-box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
+    -moz-box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
+    box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
     cursor: pointer;
   }
   &-container {
@@ -57,9 +55,9 @@ export default {
     padding-top: 40px;
     min-height: 500px;
     justify-content: center;
-    -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
-    -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
-    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.7);
+    -webkit-box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
+    -moz-box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
+    box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.7);
   }
   &-avatar-block {
     margin-right: 40px;
@@ -68,9 +66,9 @@ export default {
       margin-top: 20px;
       border-radius: 50%;
       border: 5px solid #272133;
-      -webkit-box-shadow: 4px 4px 8px 0px rgba(235, 25, 110, 1);
-      -moz-box-shadow: 4px 4px 8px 0px rgba(235, 25, 110, 1);
-      box-shadow: 4px 4px 8px 0px rgba(235, 25, 110, 1);
+      -webkit-box-shadow: 4px 4px 8px 0 rgba(235, 25, 110, 1);
+      -moz-box-shadow: 4px 4px 8px 0 rgba(235, 25, 110, 1);
+      box-shadow: 4px 4px 8px 0 rgba(235, 25, 110, 1);
     }
   }
   &-info-block {
